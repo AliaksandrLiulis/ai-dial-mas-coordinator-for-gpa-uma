@@ -149,3 +149,20 @@ services:
       - DDG_MCP_URL=http://ddg-search-mcp-server:8000/mcp
     volumes:
       - ./data:/app/data
+
+  mas-coordinator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - core
+      - ums-agent
+      - general-purpose-agent
+    ports:
+      - "8055:8055"
+    environment:
+      - DIAL_ENDPOINT=http://core:8080
+      - DEPLOYMENT_NAME=gpt-4o
+      - UMS_AGENT_ENDPOINT=http://ums-agent:8000
+      - DIAL_API_KEY=${DIAL_API_KEY:-dial_api_key}
+      - LOG_LEVEL=INFO
